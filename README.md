@@ -1,4 +1,4 @@
-# MI
+# GNN enhanced Code Summarization model
 This code is base on BASTS project
 
 ## Current progress:
