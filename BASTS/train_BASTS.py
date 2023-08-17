@@ -119,7 +119,7 @@ if __name__ == '__main__':
     import warnings
     warnings.filterwarnings("ignore")
     import os
-    os.environ["CUDA_VISIBLE_DEVICES"] = '7'
+    os.environ["CUDA_VISIBLE_DEVICES"] = '0'
 
     set_seed()
     BOS_WORD = '<s>'
@@ -131,12 +131,12 @@ if __name__ == '__main__':
     BATCH_SIZE = 128
 
     # Java dataset
-    # SRC_VOCAB_SIZE = 44601   # the size of vocab.code, you can see the file
-    # TRG_VOCAB_SIZE = 50004   # the size of vocab.nl, you can see the file
-    # dataName = 'Java'  # Default dataset is java
+    SRC_VOCAB_SIZE = 44601   # the size of vocab.code, you can see the file
+    TRG_VOCAB_SIZE = 50004   # the size of vocab.nl, you can see the file
+    dataName = 'Java'  # Default dataset is java
 
     # Python
-    SRC_VOCAB_SIZE = 50004   # the size of vocab.code, you can see the file
-    TRG_VOCAB_SIZE = 50004   # the size of vocab.nl, you can see the file
-    dataName = 'Python'
+    # SRC_VOCAB_SIZE = 50004   # the size of vocab.code, you can see the file
+    # TRG_VOCAB_SIZE = 50004   # the size of vocab.nl, you can see the file
+    # dataName = 'Python'
     run(dataName)
