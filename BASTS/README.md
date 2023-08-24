@@ -8,10 +8,10 @@
     * pytorch 1.4.0-gpu
 
 ## Step through
-1. Preprocess for Java and Python data:
+1. ** Preprocess for Java and Python data: (这一步我当时打包JAVA.zip的时候已经做了，直接从第二步开始)
 
    `python data_preprocess.py`
-2. Train the model:
+2. Train the model: （这里由于BASTS的实现全部都使用了cuda，得找个有NVIDA GPU的设备跑）
 
     `python train_BASTS.py`
 3. Output the test data comment:

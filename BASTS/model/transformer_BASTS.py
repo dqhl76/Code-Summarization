@@ -50,7 +50,7 @@ class EncoderDecoder(nn.Module):
         self.decoder = decoder
         self.src_embed = src_embed
         self.tgt_embed = tgt_embed
-        self.ast_fc1 = nn.Sequential(nn.Linear(1024, 512), nn.ReLU())
+        self.ast_fc1 = nn.Sequential(nn.Linear(12800, 512), nn.ReLU())
         # self.ast_fc2 = nn.Sequential(nn.Linear(1, 512), nn.Tanh())
         self.generator = generator
 
@@ -60,13 +60,14 @@ class EncoderDecoder(nn.Module):
                            tgt, tgt_mask)
 
     def encode(self, src, ast, src_mask):
+        # print(ast.shape)
         # emb = self.src_embed(src) + self.ast_fc2(self.ast_fc1(ast).unsqueeze(-1))   # emb 是 （80， 100， 512） ast是（80，125）
-        ast = ast.unsqueeze(1)
+        # ast = ast.unsqueeze(1)
         # print(ast.shape)
-        ast = ast.expand(ast.shape[0], src.shape[1], ast.shape[2])
+        # ast = ast.expand(ast.shape[0], src.shape[1], ast.shape[2])
         # print(ast.shape)
-        emb = torch.cat([self.src_embed(src), ast], 2)
-        # print("before", emb.size())
+        emb = self.src_embed(src)
+        print("before", emb.size())
         emb = self.ast_fc1(emb)
         # print("after", emb.size())
         return self.encoder(emb, src_mask)
