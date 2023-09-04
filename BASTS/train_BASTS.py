@@ -13,7 +13,7 @@ from utils.batch import Batch
 from model.transformer_BASTS import make_model
 from utils.label_smothing import LabelSmoothing
 from utils.optimizer import NoamOpt
-from utils.loss_compute import MultiGPULossCompute
+from utils.loss_compute import MultiGPULossCompute, SimpleLossCompute
 from utils.train import run_epoch_, greedy_decode
 import time
 import random
@@ -27,6 +27,11 @@ def load_data(set_type, dataName = 'Java'):
     train_set = np.load('code_sum_dataset/' + dataName + '/' + set_type + '.npy', allow_pickle=True)
     batches = []
     num_batch = math.ceil(len(train_set) / batch_size)
+    print("*****************")
+    print(f"train set: {train_set}")
+    print(f"train set length: {len(train_set)}")
+    print(f"num batch: {num_batch}")
+    print("*****************")
     for i in range(num_batch-2):   # Round down
         b = train_set[batch_size*i:batch_size*(i+1)]
         batch_code = torch.LongTensor(np.stack(b[:, 0]))
@@ -89,11 +94,11 @@ def run(dataName = 'Java'):
             start = time.time()
             model.train()
             run_epoch_(train_batches, model,
-                       MultiGPULossCompute(model.generator, criterion, devices=devices, opt=model_opt))
+                       SimpleLossCompute(model.generator, criterion, opt=model_opt))
             print('Time taken for 1 epoch: {} secs\n'.format(time.time() - start))
             model.eval()
             loss = run_epoch_([val_batches[0]], model,
-                              MultiGPULossCompute(model.generator, criterion, devices=devices, opt=model_opt))
+                              SimpleLossCompute(model.generator, criterion, opt=model_opt))
 
             print('epoch ', str(epoch+1), '   evaluate loss:', loss)
             torch.save(model, 'BASTS_model_' + dataName + '/code_comment_ast' + '.epoch' + str(epoch + 1) + '.pt')

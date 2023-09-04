@@ -50,7 +50,7 @@ class EncoderDecoder(nn.Module):
         self.decoder = decoder
         self.src_embed = src_embed
         self.tgt_embed = tgt_embed
-        self.ast_fc1 = nn.Sequential(nn.Linear(12800, 512), nn.ReLU())
+        self.ast_fc1 = nn.Sequential(nn.Linear(512, 512), nn.ReLU())
         # self.ast_fc2 = nn.Sequential(nn.Linear(1, 512), nn.Tanh())
         self.generator = generator
 
