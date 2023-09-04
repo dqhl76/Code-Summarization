@@ -129,21 +129,21 @@ def word2idx(c, n, code_w2i, nl_w2i):
     return code, nl
 
 
-def save_as_array(code_path, nl_path, ast_path, dataName = 'Java'):
+def save_as_array(code_path, nl_path, dataName = 'Java'):
     # @TODO（dqhl76），删除和ast相关的部分
     dataset = []
     # 三个文件读进来
     code_lines = open(code_path, encoding='utf-8').readlines()
     nl_lines = open(nl_path, encoding='utf-8').readlines()
-    ast_lines = open(ast_path, encoding='utf-8').readlines()
+    # ast_lines = open(ast_path, encoding='utf-8').readlines()
     # get_w2i 得到一个按照频率打分的分数（越低频率越高）
     code_w2i, nl_w2i = get_w2i(dataName)
     for i in range(len(code_lines)):
         # 对每一行split为单个单词
         c_words, n_words = code_lines[i].replace('\n', '').split(' '), nl_lines[i].replace('\n', '').split(' ')
         
-        ast_vec = ast_lines[i].split(' ')
-        ast_vec = [float(f_num) for f_num in ast_vec]
+        # ast_vec = ast_lines[i].split(' ')
+        # ast_vec = [float(f_num) for f_num in ast_vec]
         
         # 这里相当于把每行变成等长（100个字符）
         n_words, c_words = fix_length(n_words, c_words)
@@ -152,7 +152,7 @@ def save_as_array(code_path, nl_path, ast_path, dataName = 'Java'):
         code, nl = word2idx(c_words, n_words, code_w2i, nl_w2i)
 
         # 以numpy格式保存code和nl
-        dataset.append([np.array(code), np.array(ast_vec), np.array(nl)])
+        dataset.append([np.array(code), np.array(nl)])
     file_name = code_path.split('/')[3].split('.')[0]
     np.save('code_sum_dataset/' + dataName + '/' + file_name + '.npy', np.array(dataset))
     print(file_name + ' dataset saved as numpy array!')
@@ -163,8 +163,10 @@ if __name__ == '__main__':
     for name in dataName:
         build_vocab(train_path='code_sum_dataset/' + name + '/train/train.token', vocab_path='code_sum_dataset/' + name + '/vocab')
         print(name + ' vocab success!!')
-    type_list = ['test', 'valid', 'train']
+    # type_list = ['test', 'valid', 'train']
+    type_list = ['train']
     for name in dataName:
         for type in type_list:
             save_as_array('./code_sum_dataset/' + name + '/' + type + '/' + type + '.token.code', './code_sum_dataset/' + name + '/' + type + '/' + type + '.token.nl',
-                        './code_sum_dataset/' + name + '/' + type + '/' + type + '.token.ast', dataName=name)
+                        # './code_sum_dataset/' + name + '/' + type + '/' + type + '.token.ast',
+                         dataName=name)
