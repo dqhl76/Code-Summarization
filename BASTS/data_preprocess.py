@@ -153,18 +153,18 @@ def save_as_array(code_path, nl_path, ast_path, dataName = 'Java'):
 
         # 以numpy格式保存code和nl
         dataset.append([np.array(code), np.array(ast_vec), np.array(nl)])
-    file_name = code_path.split('/')[2].split('.')[0]
+    file_name = code_path.split('/')[3].split('.')[0]
     np.save('code_sum_dataset/' + dataName + '/' + file_name + '.npy', np.array(dataset))
     print(file_name + ' dataset saved as numpy array!')
 
 
 if __name__ == '__main__':
-    dataName = ['Java', 'Python']
+    dataName = ['Java']
     for name in dataName:
-        build_vocab(train_path='code_sum_dataset/' + name + '/train.token', vocab_path='code_sum_dataset/' + name + '/vocab')
+        build_vocab(train_path='code_sum_dataset/' + name + '/train/train.token', vocab_path='code_sum_dataset/' + name + '/vocab')
         print(name + ' vocab success!!')
     type_list = ['test', 'valid', 'train']
     for name in dataName:
         for type in type_list:
-            save_as_array('code_sum_dataset/' + name + '/' + type + '.token.code', 'code_sum_dataset/' + name + '/' + type + '.token.nl',
-                        'code_sum_dataset/' + name + '/' + type + '.token.ast', dataName=name)
+            save_as_array('./code_sum_dataset/' + name + '/' + type + '/' + type + '.token.code', './code_sum_dataset/' + name + '/' + type + '/' + type + '.token.nl',
+                        './code_sum_dataset/' + name + '/' + type + '/' + type + '.token.ast', dataName=name)
