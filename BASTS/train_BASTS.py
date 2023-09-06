@@ -26,19 +26,25 @@ def load_data(set_type, dataName = 'Java'):
         batch_size = 1
     train_set = np.load('code_sum_dataset/' + dataName + '/' + set_type + '.npy', allow_pickle=True)
     batches = []
+    print(len(train_set))
+    print(batch_size)
     num_batch = math.ceil(len(train_set) / batch_size)
-    print("*****************")
-    print(f"train set: {train_set}")
-    print(f"train set length: {len(train_set)}")
-    print(f"num batch: {num_batch}")
-    print("*****************")
+    # print("*****************")
+    # print(f"train set: {train_set}")
+    # print(f"train set length: {len(train_set)}")
+    # print(f"num batch: {num_batch}")
+    # print("*****************")
+    print(num_batch-2)
     for i in range(num_batch-2):   # Round down
         b = train_set[batch_size*i:batch_size*(i+1)]
         batch_code = torch.LongTensor(np.stack(b[:, 0]))
+        # 因为没传ast，这里ast和nl共用一个，但后面不会使用这里的ast（只是为了少改一点）
         batch_ast = torch.FloatTensor(np.stack(b[:, 1]))
-        batch_nl = torch.LongTensor(np.stack(b[:, 2]))
+        batch_nl = torch.LongTensor(np.stack(b[:, 1]))
         batch = Batch(batch_code, batch_ast, batch_nl)
+        print(batch)
         batches.append(batch)
+    print(batches)
     return batches
 
 
@@ -47,6 +53,10 @@ def run(dataName = 'Java'):
     if is_training:
         train_batches = load_data('train', dataName)
         val_batches = load_data('valid', dataName)
+
+    print("----------")
+    print(train_batches)
+    print("----------")
 
     # multi gpu, But sometimes we encounter bugs, so we use single gpu
     pad_idx = 0
@@ -93,6 +103,7 @@ def run(dataName = 'Java'):
             print('begin ' + str(epoch + 1) + " training")
             start = time.time()
             model.train()
+            print(f"train batches {train_batches}")
             run_epoch_(train_batches, model,
                        SimpleLossCompute(model.generator, criterion, opt=model_opt))
             print('Time taken for 1 epoch: {} secs\n'.format(time.time() - start))
@@ -133,7 +144,8 @@ if __name__ == '__main__':
     UNK_WORD = '<unk>'
     MAX_LEN_CODE = 100
     MAX_LEN_NL = 30
-    BATCH_SIZE = 128
+    # batch size 128 -> 10
+    BATCH_SIZE = 10
 
     # Java dataset
     SRC_VOCAB_SIZE = 44601   # the size of vocab.code, you can see the file
