@@ -39,19 +39,21 @@ def run_epoch_(train_batches, model, loss_compute):
     total_loss = 0
     tokens = 0
     i = 0
-    print("*****************")
-    print(f"train batches: {train_batches}")
-    print("*****************")
+    # print("*****************")
+    # print(f"train batches: {train_batches}")
+    # print("*****************")
     for batch in train_batches:
         i += 1
         if batch is None:
             continue
+        if i == 1:
+            print(type(batch))
         out = model.forward(batch.src.cuda(), batch.ast.cuda(), batch.trg.cuda(),
                             batch.src_mask.cuda(), batch.trg_mask.cuda())
         loss = loss_compute(out, batch.trg_y.cuda(), batch.ntokens)            
-        print("*****************")
-        print(f"loss: {loss}")
-        print("*****************")
+        # print("*****************")
+        # print(f"loss: {loss}")
+        # print("*****************")
         total_loss += loss
         total_tokens += batch.ntokens
         tokens += batch.ntokens
@@ -62,7 +64,7 @@ def run_epoch_(train_batches, model, loss_compute):
             start = time.time()
             tokens = 0
         # torch.cuda.empty_cache()
-    return total_loss / total_tokens.item()
+    return total_loss / total_tokens
 
 
 def greedy_decode(model, src, ast, src_mask, max_len, start_symbol):
